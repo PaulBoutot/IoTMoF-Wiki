@@ -1,0 +1,99 @@
+
+/* Optional */
+!Standard Mode: off
+
+/* Optional */
+!List Modes: 
+	NORMAL::NormalModeName::default,
+	RESTRICTED::RestrictedModeName, 
+	EMERGENCY::EmergencyModeName, 
+	DEGRADED::DegradedModeName
+
+/* Optional */
+!List Exceptions: 
+	{HARDWARE_EXCEPTION::HardwareExceptionName},
+	{SOFTWARE_EXCEPTION::SoftwareExceptionName},
+	{NETWORK_EXCEPTION::NetworkExceptionName},
+	{ENVIRONMENT_EXCEPTION::EnvironmentExceptionName},
+	{HARDWARE_EXCEPTION::GlobalHardwareExceptionName::global},
+	{SOFTWARE_EXCEPTION::GlobalSoftwareExceptionName::global},
+	{NETWORK_EXCEPTION::GlobalNetworkExceptionName::global},
+	{ENVIRONMENT_EXCEPTION::GlobalEnvironmentExceptionName::global}
+
+/* Use Case Template */
+
+use case: UseCaseName
+scope:	  SystemName
+level:	  SUMMARY
+intention:     "insert intention text here."
+multiplicity:  "insert multiplicity text here."
+primary actor: HUMAN::ActorName::0..*
+secondary actor: 
+	PHYSICAL_ENTITY::PhysicalEntityActorName::1..1, 
+	SOFTWARE::SoftwareActorName::*..*, 
+	SENSOR::SensorActorName::1..10, 
+	ACTUATOR::ActuatorActorName::1..10,
+	TAG::TagActorName::1..10,
+	READER::ReaderActorName::1..10
+main success scenario:
+	"Condition or Control Flow Step."
+	1. "Interaction step between ActorName and System."
+	2. [InvokedUseCase1] "Invocation step text."
+	3. [InvokedUseCase2] "Invocation step text."
+	4.^ "Internal step text."
+	5.^ timeout:10ms  "Timeout step text."
+	6.^ timeout:10s   "Timeout step text."
+	7.^ timeout:10min "Timeout step text."
+	8.^ timeout:10h   "Timeout step text."
+	use case ends in: SUCCESS
+extensions:
+	alternative for (1-3):
+		(1-3)a. "Interaction step between ActorName and System."
+		use case ends in: SUCCESS
+	alternative for (1-3):
+		(1-3)b. "Interaction step between ActorName and System."
+		use case ends in: FAILURE
+	exception for 1:
+		1a. {HARDWARE_EXCEPTION::HardwareExceptionName} ##
+		use case continues at Step: 6
+	exception for 1:
+		1b. {SOFTWARE_EXCEPTION::SoftwareExceptionName} ##
+		use case ends in: FAILURE
+
+/* Invoked Use Cases */
+
+use case: InvokedUseCase1
+scope:	  SystemName
+level:	  USER_GOAL
+intention:     "insert intention text here."
+multiplicity:  "insert multiplicity text here."
+primary actor: HUMAN::ActorName::0..*
+main success scenario:
+	1. "Interaction step between ActorName and System."
+	use case ends in: SUCCESS
+
+
+use case: InvokedUseCase2
+scope:	  SystemName
+level:	  SUB_FUNCTION
+intention:     "insert intention text here."
+multiplicity:  "insert multiplicity text here."
+primary actor: None
+main success scenario:
+	1. "Interaction step between ActorName and System."
+	use case ends in: SUCCESS
+
+/* Handler Use Cases */
+
+handler use case: HandlerUseCaseName
+scope:	  SystemName
+level:	  USER_GOAL
+intention:     "insert intention text here."
+multiplicity:  "insert multiplicity text here."
+primary actor: HUMAN::ActorName::0..*
+contexts and exceptions:
+	UseCaseName {HARDWARE_EXCEPTION::HardwareExceptionName},
+	UseCaseName {SOFTWARE_EXCEPTION::SoftwareExceptionName}
+main success scenario:
+	1. "Interaction step between ActorName and System."
+	use case ends in: SUCCESS
